@@ -31,7 +31,7 @@ const Collection = () => {
     const {collectionId} = router.query;
     const [collection, setCollection] = useState({});
     const [nfts, setNfts] = useState([]);
-    const [listing, setListing] = useState([]);
+    const [listings, setListings] = useState([]);
 
     
     // Nft module
@@ -57,7 +57,24 @@ const Collection = () => {
 
     const marketPlaceModule = useMemo(() => {
         if (!provider) return 
+
+        const sdk = new ThirdwebSDK(
+            provider.getSigner(),
+            'https://eth-rinkeby.alchemyapi.io/v2/tXFGMDnQyHmJv8Imh5ma0MxDzfNHowzN'
+        )
+        return sdk.getMarketplaceModule(
+            '0x89732B03a50E994Af71F1A4F7E4e9F27C5Fcd59F'
+        )
     }, [provider])
+
+    // get all collection listings 
+    useEffect(() => {
+        if (!marketPlaceModule) return
+
+        ;(async () => {
+            setListing(await marketPlaceModule.getAllListings())
+        }) ()
+    }, [marketPlaceModule]);
     
     return <div></div>;
 };
