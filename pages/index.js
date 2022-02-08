@@ -4,8 +4,7 @@ import Hero from '../components/Hero';
 import {useWeb3} from '@3rdweb/hooks';
 import { useEffect } from 'react';
 import {client} from '../lib/sanityClient';
-
-
+import toast, {Toaster} from 'react-hot-toast';
 
 
 const style = {
@@ -17,6 +16,19 @@ const style = {
 
 export default function Home() {
   const {address, connectWallet} = useWeb3()
+
+  // creating a toast notification
+  const welcomeUser = (userName, toastHandler = toast) => {
+    toastHandler.success(
+      `Welcome back ${userName !== 'unNamed' ? `${userName}` : ''}!`,
+      {
+        style: {
+          background: '#40111d',
+          color: '#fff'
+        },
+      },
+    )
+  }
 
   useEffect(() => {
     // do nothing if there is no connected address
@@ -32,11 +44,16 @@ export default function Home() {
         walletAddress: address
       }
       const result = await client.createIfNotExists(userDoc)
-    }) ()
+      welcomeUser(result.userName)
+    }) () 
     
   }, [address]);
   return (
     <div className={style.wrapper}>
+      <Toaster
+      position='top-center'
+      reverseOrder={false}/>
+
       {address ? (
       <>
         <Header/>
