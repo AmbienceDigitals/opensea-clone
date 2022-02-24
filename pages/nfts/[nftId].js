@@ -3,6 +3,9 @@ import {useRouter} from 'next/router';
 import { useWeb3 } from '@3rdweb/hooks';
 import {ThirdwebSDK} from '@3rdweb/sdk';
 import Header from '../../components/Header';
+import NFTImage from '../../components/nft/NFTImage';
+import GeneralDetails from '../../components/nft/GeneralDetails';
+import ItemActivity from '../../components/nft/ItemActivity';
 
 const style = {
     wrapper: `flex flex-col items-center container-lg text-[#e5e8eb]`,
@@ -16,7 +19,7 @@ const Nft = () => {
     const {provider} = useWeb3();
     const [selectedNft, setSelectedNft] = useState();
     const [listings, setListings] = useState([]);
-    const Router = useRouter();
+    const router = useRouter();
 
         // Nft module
     const nftModule = useMemo(() => {
@@ -26,7 +29,7 @@ const Nft = () => {
             provider.getSigner(),
             'https://eth-rinkeby.alchemyapi.io/v2/tXFGMDnQyHmJv8Imh5ma0MxDzfNHowzN'
         )
-        return sdk.getNFTModule(collectionId)
+        return sdk.getNFTModule('0x8Bd252fB65F6D8B1B13FE224050491cDD001fd05')
     }, [provider])
 
     // get all nfts in the collection
@@ -36,10 +39,10 @@ const Nft = () => {
         ;(async () => {
             const nfts = await nftModule.getAll()
 
-            const selectedNftArray = nfts.filter(
-                (nft) => nft.id === router.query.assetId);
+            const selectedNftItem = nfts.find(
+                (nft) => nft.id === router.query.nftId);
 
-            setSelectedNft(selectedNftArray)
+            setSelectedNft(selectedNftItem)
         }) ();
     }, [nftModule]);
 
@@ -56,6 +59,7 @@ const Nft = () => {
         )
     }, [provider])
 
+    // useEffect to load marketplace
     useEffect(() => {
         if (!marketPlaceModule) return;
 
@@ -65,7 +69,25 @@ const Nft = () => {
     }, [marketPlaceModule]);
 
     return (
-        <Header/> 
+        <div>
+            <Header/> 
+            <div className={style.wrapper}>
+                <div className={style.container}>
+                    <div className={style.topContent}>
+                        <div className={style.nftImageContainer}>
+                            <NFTImage
+                            selectedNft = {selectedNft}/>
+                        </div>
+                        <div className={style.detailsContainer}>
+                            <GeneralDetails
+                            selectedNft={selectedNft}/>
+                        </div>
+                    </div>
+                    <ItemActivity/>
+                </div>
+            </div>
+            
+        </div>
     )
 }   
 
