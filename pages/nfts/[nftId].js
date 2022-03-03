@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 import NFTImage from '../../components/nft/NFTImage';
 import GeneralDetails from '../../components/nft/GeneralDetails';
 import ItemActivity from '../../components/nft/ItemActivity';
+import Purchase from '../../components/nft/Purchase';
 
 const style = {
     wrapper: `flex flex-col items-center container-lg text-[#e5e8eb]`,
@@ -27,7 +28,6 @@ const Nft = () => {
 
         const sdk = new ThirdwebSDK(
             provider.getSigner(),
-            'https://eth-rinkeby.alchemyapi.io/v2/tXFGMDnQyHmJv8Imh5ma0MxDzfNHowzN'
         )
         return sdk.getNFTModule('0x8Bd252fB65F6D8B1B13FE224050491cDD001fd05')
     }, [provider])
@@ -52,7 +52,6 @@ const Nft = () => {
 
         const sdk = new ThirdwebSDK(
             provider.getSigner(),
-            'https://eth-rinkeby.alchemyapi.io/v2/tXFGMDnQyHmJv8Imh5ma0MxDzfNHowzN'
         )
         return sdk.getMarketplaceModule(
             '0x89732B03a50E994Af71F1A4F7E4e9F27C5Fcd59F'
@@ -81,6 +80,11 @@ const Nft = () => {
                         <div className={style.detailsContainer}>
                             <GeneralDetails
                             selectedNft={selectedNft}/>
+                            <Purchase
+                            isListed={router.query.isListed}
+                            selectedNft={selectedNft}
+                            listings={listings}
+                            marketPlaceModule={marketPlaceModule}/>
                         </div>
                     </div>
                     <ItemActivity/>
