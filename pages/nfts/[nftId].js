@@ -63,8 +63,8 @@ const Nft = () => {
         if (!marketPlaceModule) return;
 
         ;(async () => {
-            setListings(await marketPlaceModule.getAllListings)
-        })
+            setListings(await marketPlaceModule.getAllListings())
+        }) ()
     }, [marketPlaceModule]);
 
     return (
@@ -73,7 +73,7 @@ const Nft = () => {
             <div className={style.wrapper}>
                 <div className={style.container}>
                     <div className={style.topContent}>
-                        <div className={style.nftImageContainer}>
+                        <div className={style.nftImgContainer}>
                             <NFTImage
                             selectedNft = {selectedNft}/>
                         </div>

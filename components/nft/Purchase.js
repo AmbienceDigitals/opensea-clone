@@ -22,7 +22,7 @@ const Purchase = ({isListed, selectedNft, listings, marketPlaceModule}) => {
             setSelectedMarketNft(
                 listings.find((marketNft) => marketNft.asset?.id === selectedNft.id)
             )
-        })
+        })()
     }, [selectedNft, listings, isListed]);
     
     // useEffect to enableButton based on selectedNft or selectedMarketNft
@@ -33,14 +33,13 @@ const Purchase = ({isListed, selectedNft, listings, marketPlaceModule}) => {
     }, [selectedMarketNft, selectedNft])
 
     // toast to confirm purchase
-    const confirmPurchase = (toastHandler = toast) => {
-        toastHandler.success('Purchase Successful', {
+    const confirmPurchase = (toastHandler = toast) => 
+        toastHandler.success('Purchase Successful!', {
             style: {
                 background: '#04111d',
                 color: 'fff'
             },
         })
-    }
 
     // function to buy nft
     const buyItem = async (
@@ -49,24 +48,27 @@ const Purchase = ({isListed, selectedNft, listings, marketPlaceModule}) => {
         quantityDesired = 1,
         module = marketPlaceModule
     ) => {
+        console.log(listingId, quantityDesired, module, 'david')
         // using thirdweb buyout method
-        await module.buyOutDirectListing({listingId, quantityDesired})
+        await module.buyoutDirectListing({
+            listingId: listingId,
+            quantityDesired: quantityDesired
+        }).catch((err) => console.log(err))
 
-        confirmPurchase();
+        confirmPurchase()
     }
 
 
     return (
         <div className="bg-[#303339] h-20 w-full flex items-center px-12 rounded-lg border-[#151c22] border">
 
-            <Toaster position="bottom-left" reverseOrder={false}/>
+            <Toaster position="top-center" reverseOrder={false}/>
             
             {isListed === 'true' ? (
                 <>
                     <div
                     onClick={() => {
-                        enableButton ? buyItem(selectedMarketNft.id, 1) : null
-                    }}
+                        enableButton ? buyItem(selectedMarketNft.id, 1) : null}}
                     className={`${style.button} bg-[#2081e2] hover:bg-[#42a0ff]`}>
 
                         <IoMdWallet className={style.buttonIcon}/>
